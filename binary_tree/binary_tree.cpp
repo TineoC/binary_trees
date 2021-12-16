@@ -63,10 +63,7 @@ Nodo* crearNodo(int valor) {
 
 Nodo* insertar(Nodo* nodo, int valor) {
 
-    if (nodo == NULL) {
-        // Si el arbol está vacío
-        return crearNodo(valor);
-    }
+    if (nodo == NULL) return crearNodo(valor); // Si el arbol esta vacio
 
     if (valor < nodo->numero) {
         // Si el valor que se quiere insertar
@@ -98,11 +95,7 @@ Nodo* minimoNodo(Nodo* nodo) {
 }
 
 Nodo* eliminar(Nodo* root, int valor) {
-    if (root == NULL) {
-        // Caso base
-        // Si el arbol está vacío
-        return root;
-    }
+    if (root == NULL) return root;
 
     if (valor < root->numero) {
         // Si el valor a eliminar
@@ -110,7 +103,7 @@ Nodo* eliminar(Nodo* root, int valor) {
         // Sigue buscando por la izquierda
         root->izquierda = eliminar(root->izquierda, valor);
     }
-    else if (root->numero < valor) {
+    else if (valor > root->numero) {
         // Si el valor a eliminar
         // Es mayor o igual al que tiene el nodo actual
         // Sigue buscando por la derecha
@@ -123,28 +116,28 @@ Nodo* eliminar(Nodo* root, int valor) {
         if (root->izquierda == NULL) {
             // Si el hijo izquierdo está vacio
             Nodo* derecha = root->derecha;
-            delete root;
+            free(root);
             return derecha;
         }
         else if (root->derecha == NULL) {
             // Si el hijo derecho está vacío
             Nodo* izquierda = root->izquierda;
-            delete root;
+            free(root);
             return izquierda;
         }
+
+        // Si el nodo tiene dos hijos
+
+        // Se eliminará el nodo y lo reemplazará el nodo más a la izquierda del hijo derecho.
+
+        Nodo* minimo = minimoNodo(root->derecha); // Encuentra el nodo más a la izquierda en el hijo derecho del nodo.
+
+        root->numero = minimo->numero; // Poner el valor del mínimo en el nodo a eliminar
+
+        root->derecha = eliminar(root->derecha, minimo->numero); // Elimina el mínimo nodo de su posición anterior
     }
 
-    // Si el nodo tiene dos hijos
-
-    // Se eliminará el nodo y lo reemplazará el nodo más a la izquierda del hijo derecho.
-
-    Nodo* minimo = minimoNodo(root->derecha); // Encuentra el nodo más a la izquierda en el hijo derecho del nodo.
-
-    root->numero = minimo->numero; // Poner el valor del mínimo en el nodo a eliminar
-
-    root->derecha = eliminar(root->derecha, minimo->numero); // Elimina el mínimo nodo de su posición anterior
-
-    return root; // Elimina el nodo
+    return root;
 }
 
 // 3. Mostrar el árbol
@@ -222,7 +215,7 @@ void menu() {
             else {
                 cout << "ERROR: EL ARBOL ESTA VACIO" << endl;
             }
-            
+
             cout << "\n";
             system("pause");
             break;
